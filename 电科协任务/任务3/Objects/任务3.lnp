@@ -1,0 +1,12 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\Delay.obj",
+".\Objects\UART.obj",
+".\Objects\LCD1602.obj",
+".\Objects\key_selfPlus.obj",
+".\Objects\Timer0.obj",
+".\Objects\MatrixKey.obj",
+".\Objects\AT24C02.obj",
+".\Objects\I2C.obj" 
+TO ".\Objects\任务3" 
+PRINT(".\Listings\任务3.m51") RAMSIZE(256) 

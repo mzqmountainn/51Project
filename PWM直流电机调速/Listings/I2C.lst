@@ -1,0 +1,88 @@
+C51 COMPILER V9.54   I2C                                                                   11/29/2023 14:42:05 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE I2C
+OBJECT MODULE PLACED IN .\Objects\I2C.obj
+COMPILER INVOKED BY: D:\software\keilc51\C51\BIN\C51.EXE I2C.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listi
+                    -ngs\I2C.lst) OBJECT(.\Objects\I2C.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include "Delay.h"
+   3          
+   4          sbit I2C_SCL = P2^1;
+   5          sbit I2C_SDA = P2^0;
+   6          void I2C_Start(void){
+   7   1              I2C_SCL = 1;
+   8   1              I2C_SDA = 1;
+   9   1              I2C_SDA = 0;
+  10   1              I2C_SCL = 0;
+  11   1      }
+  12          void I2C_Stop(void){
+  13   1              I2C_SDA = 0;
+  14   1              I2C_SCL = 1;
+  15   1              I2C_SDA = 1;
+  16   1              
+  17   1      }
+  18          void I2C_sendByte(unsigned char content){
+  19   1              int i;
+  20   1              I2C_SCL = 0;
+  21   1              for (i = 0; i <8; i++){
+  22   2                      I2C_SDA = content&(0x80>>i);
+  23   2                      I2C_SCL = 1;
+  24   2                      I2C_SCL = 0;
+  25   2              }
+  26   1      }
+  27          unsigned char I2C_receiveByte(void){
+  28   1              int  i ;
+  29   1              unsigned char target;
+  30   1              I2C_SDA= 1;
+  31   1              for(i = 0;i<8;i++){
+  32   2                      I2C_SCL = 1;
+  33   2                      if(I2C_SDA){target|=(0x80>>i);}
+  34   2                      I2C_SCL = 0;
+  35   2              }
+  36   1              return  target;
+  37   1              
+  38   1      }
+  39          void sendAck(unsigned char target){
+  40   1              I2C_SDA = target;
+  41   1              I2C_SCL = 1;
+  42   1              I2C_SCL = 0;
+  43   1      }
+  44          unsigned char receiveAck(void){
+  45   1              unsigned char target;
+  46   1              I2C_SDA = 1;
+  47   1              I2C_SCL = 1;
+  48   1              target = I2C_SDA;
+  49   1              I2C_SCL= 0;
+  50   1              return target;
+  51   1      }
+  52          
+  53          
+  54          
+C51 COMPILER V9.54   I2C                                                                   11/29/2023 14:42:05 PAGE 2   
+
+  55          
+  56          
+  57          
+  58          
+  59          
+  60          
+  61          
+  62          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    128    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

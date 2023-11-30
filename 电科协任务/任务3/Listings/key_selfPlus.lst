@@ -1,0 +1,64 @@
+C51 COMPILER V9.54   KEY_SELFPLUS                                                          11/30/2023 22:24:17 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE KEY_SELFPLUS
+OBJECT MODULE PLACED IN .\Objects\key_selfPlus.obj
+COMPILER INVOKED BY: D:\software\keilc51\C51\BIN\C51.EXE key_selfPlus.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRIN
+                    -T(.\Listings\key_selfPlus.lst) OBJECT(.\Objects\key_selfPlus.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          
+   3          unsigned char key_keynum = 0;
+   4          
+   5          
+   6          unsigned char key_getStatus(void){
+   7   1              unsigned char key = 0;
+   8   1              if(P3_1 == 0){key = 1;}
+   9   1              if(P3_0 == 0){key = 2;}
+  10   1              if(P3_2 == 0){key = 3;}
+  11   1              if(P3_3 == 0){key = 4;}
+  12   1              return key;
+  13   1      }
+  14          
+  15          unsigned char key_return(void){
+  16   1              unsigned char temp;
+  17   1              temp = key_keynum ; 
+  18   1              key_keynum = 0;
+  19   1              return temp;
+  20   1      }
+  21          
+  22          void key_loop(void){
+  23   1              static unsigned char nowStatus,beforeStatus;
+  24   1              //static int continueCount;
+  25   1              beforeStatus = nowStatus ; 
+  26   1              nowStatus = key_getStatus();
+  27   1              if(beforeStatus == 1 &&nowStatus == 0){
+  28   2                      key_keynum =1;
+  29   2              }
+  30   1              if(beforeStatus == 2 &&nowStatus == 0){
+  31   2                      key_keynum =2;
+  32   2              }
+  33   1              if(beforeStatus == 3 &&nowStatus == 0){
+  34   2                      key_keynum =3;
+  35   2              }
+  36   1              if(beforeStatus == 4 &&nowStatus == 0){
+  37   2                      key_keynum =4;
+  38   2              }
+  39   1      
+  40   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     85    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

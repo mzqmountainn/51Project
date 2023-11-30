@@ -1,0 +1,96 @@
+C51 COMPILER V9.54   MAIN                                                                  10/21/2023 15:33:59 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\software\keilc51\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\List
+                    -ings\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          typedef enum{false = 0,true =1} bool;
+   3          void Delay(unsigned int x)              //@12.000MHz
+   4          {
+   5   1              unsigned char i, j;
+   6   1              while(x){
+   7   2                      i = 2;
+   8   2                      j = 239;
+   9   2                      do
+  10   2                      {
+  11   3                              while (--j);
+  12   3                      } while (--i);
+  13   2                      x--;
+  14   2              }
+  15   1      
+  16   1      }
+  17          
+  18          int main(void){
+  19   1              int gap;
+  20   1              int LEDnum;
+  21   1              bool direction = 1;//0=left 1=right
+  22   1              while(1){
+  23   2                      P2=0xAA;
+  24   2                      gap = 1;
+  25   2                      LEDnum = 0;
+  26   2                      while(1){
+  27   3                              if(P3_1 == 0){
+  28   4                                      Delay(20);
+  29   4                                      while(P3_1==0)  ;
+  30   4                                      Delay(20);
+  31   4                                      P2=0xFE;
+  32   4                              }
+  33   3                              if(P3_3 == 0){ //¸´Î»
+  34   4                                      Delay(20);
+  35   4                                      while(P3_3==0)  ;
+  36   4                                      Delay(20);
+  37   4                                      break;
+  38   4                              }
+  39   3                              if(P3_2 ==0){
+  40   4                                      Delay(20);
+  41   4                                      while(P3_2==0)  ;
+  42   4                                      Delay(20);
+  43   4                                      gap++;
+  44   4                                      if(gap == 4){
+  45   5                                              gap =1;
+  46   5                                              LEDnum=0;
+  47   5                                              direction = !direction;
+  48   5                                              if(direction)
+  49   5                                                      P2=0xFE;
+  50   5                                              else
+  51   5                                                      P2=0x7f;
+  52   5                                      }
+  53   4                              }
+  54   3                              if(P3_0==0){
+C51 COMPILER V9.54   MAIN                                                                  10/21/2023 15:33:59 PAGE 2   
+
+  55   4                                      Delay(20);
+  56   4                                      while(P3_0==0)  ;
+  57   4                                      Delay(20);
+  58   4                                      LEDnum +=gap;
+  59   4                                              if(LEDnum >=8)
+  60   4                                                      LEDnum-=8;
+  61   4                                      if(direction)
+  62   4                                              P2 = ~(0x01<<LEDnum);
+  63   4                                      else
+  64   4                                              P2 = ~(0x80>>LEDnum);
+  65   4                                      
+  66   4                              }
+  67   3                              
+  68   3                      }
+  69   2              }
+  70   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    205    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

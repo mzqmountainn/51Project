@@ -1,0 +1,130 @@
+C51 COMPILER V9.54   MAIN                                                                  11/03/2023 02:34:52 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\software\keilc51\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\List
+                    -ings\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include "Delay.h"
+   3          #include "key_plus.h"
+   4          #include "Timer0.h"
+   5          #include "Timer1.h"
+   6          #include "Timer2.h"
+   7          
+   8          typedef enum{false = 0,true = 1} bool;
+   9          
+  10          unsigned int keyNum = 0;
+  11          unsigned int timeGap = 500;
+  12          bool direction = 1;  // 1 is left 0 is right
+  13          int LEDnum = 0;
+  14          bool flag = 0; // K1标志  
+  15          char mask = 0x01;
+  16          char temp_byte,swap ;
+  17          
+  18          void main(void){
+  19   1      
+  20   1              while(1){
+  21   2                      Timer1Init();
+  22   2                      LEDnum=  0;
+  23   2                      direction = 1;
+  24   2                      flag = 0;
+  25   2                      P2 = 0XFF;
+  26   2      //              Timer0Init();
+  27   2                      while(1){
+  28   3                              keyNum = key_return();
+  29   3      
+  30   3                              if(timeGap>1500)
+  31   3                                              timeGap = 500;
+  32   3                              if(keyNum==1)
+  33   3                              {       flag  =1;
+  34   4                                      P2 = 0XFF;
+  35   4                              }
+  36   3                              
+  37   3      //                      if(keyNum == 1){
+  38   3      //                              flag = 1;
+  39   3      
+  40   3      //                              Delay(500);
+  41   3      //                              direction = 1;
+  42   3      
+  43   3      //                      }
+  44   3                              if(keyNum == 2)
+  45   3                                      direction =!direction;
+  46   3                              if(keyNum == 4)
+  47   3                                      break;
+  48   3                              if(keyNum == 3){
+  49   4                                      //P2_5 = ~P2_5;
+  50   4                                      timeGap+=250;
+  51   4      
+  52   4                              }
+  53   3                      }
+  54   2                      
+C51 COMPILER V9.54   MAIN                                                                  11/03/2023 02:34:52 PAGE 2   
+
+  55   2              }
+  56   1      }
+  57          void Timer1_Rountine(void) interrupt 3
+  58          {
+  59   1              static unsigned int t1,t2,key;
+  60   1              char temp;
+  61   1              TL1 = 0x66;             //设置定时初值
+  62   1              TH1 = 0xFC;             //设置定时初值
+  63   1              t1++;t2++;key++;
+  64   1              if(t1 == 1000){
+  65   2                      P2_0 =~P2_0;
+  66   2                      t1 = 0;
+  67   2              }
+  68   1              if(t2 == timeGap){
+  69   2                      if(LEDnum == 7) LEDnum = 0;
+  70   2                      //P2_1=~P2_1;
+  71   2                      t2 = 0;if(flag){//
+  72   3                      if(direction){
+  73   4                              temp_byte = P2&mask; //获取最后一位
+  74   4                              temp =temp_byte|0xfe;
+  75   4                              P2 = ((~(0x80>>LEDnum))&temp);
+  76   4                      }else{
+  77   4                              temp_byte = P2&mask; //获取最后一位
+  78   4                              temp =temp_byte|0xfe;
+  79   4                              P2 = ((~(0x01<<(LEDnum+1)))&temp);
+  80   4                      }
+  81   3                      LEDnum++;}//
+  82   2                      
+  83   2                      
+  84   2              }
+  85   1              if(key>20)      //每隔20毫秒调用按键扫描函数
+  86   1              {
+  87   2                      key_loop();
+  88   2                      key = 0;
+  89   2              }
+  90   1      
+  91   1      
+  92   1      }
+  93          //void Timer0_Rountine(void) interrupt 1
+  94          //{
+  95          //      static unsigned int t0;
+  96          //      TL0 = 0x66;             //设置定时初值
+  97          //      TH0 = 0xFC;             //设置定时初值
+  98          //      t0++;
+  99          //      if(t0 == timeGap){
+ 100          //              P2_7 =~P2_7;
+ 101          //              t0 = 0;
+ 102          //      }
+ 103          //}
+ 104          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    329    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     17       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
