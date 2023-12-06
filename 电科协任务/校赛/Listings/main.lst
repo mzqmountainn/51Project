@@ -1,0 +1,373 @@
+C51 COMPILER V9.54   MAIN                                                                  12/03/2023 12:28:19 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\software\keilc51\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\List
+                    -ings\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include "Delay.h"
+   3          #include "key_selfPlus.h"
+   4          #include "Timer0.h"
+   5          #include "Nixie_plus.h"
+   6          #include "DS18B20.h"
+   7          
+   8          void change(void);
+   9          void check();
+  10          void ringCheck();
+  11          
+  12          typedef enum{false = 0,true =1} bool;
+  13          sbit led =P2^0;
+  14          
+  15          
+  16          unsigned char hour =23,min =59,sec =59;
+  17          char showMode =0;
+  18          unsigned char keyNum;
+  19          float T;
+  20          unsigned char ring[3]={0}; //h,m,s
+  21          bool setMode =0; //定义设置模式
+  22          int setSelect; //定义设置选择
+  23          /*unsigned*/ char setBuf[3];
+  24          bool setBufReady=0;
+  25          int startRing=0;
+  26          
+  27          
+  28          void main(){
+  29   1              led=1;
+  30   1              DS18B20_ConvertT();     
+  31   1              Delay(1000);
+  32   1              
+  33   1              Timer0Init();
+  34   1              
+  35   1              while(1){
+  36   2                      //DS18B20_ConvertT();   //转换温度
+  37   2                      //T=DS18B20_ReadT();    //读取温度
+  38   2                      ringCheck();
+  39   2                      keyNum = key_return();
+  40   2                      if(keyNum == 1){
+  41   3                              if(!setMode){
+  42   4                                      showMode++;
+  43   4                                      showMode%=3;
+  44   4                              }
+  45   3                              if(setMode){
+  46   4                                      setSelect++;
+  47   4                                      setSelect%=3;
+  48   4                              }
+  49   3                      }
+  50   2                      if(keyNum ==4){
+  51   3                              if(setMode){
+  52   4                                      setBufReady=0;
+  53   4                                      if(showMode==0){
+  54   5                                              hour = setBuf[0];
+C51 COMPILER V9.54   MAIN                                                                  12/03/2023 12:28:19 PAGE 2   
+
+  55   5                                              min= setBuf[1];
+  56   5                                              sec= setBuf[2];
+  57   5                                      }
+  58   4                                      if(showMode==1){
+  59   5                                              ring[0] = setBuf[0];
+  60   5                                              ring[1] = setBuf[1];
+  61   5                                              ring[2] = setBuf[2];
+  62   5                                      }
+  63   4                              }
+  64   3                              if(showMode !=2)
+  65   3                                      setMode = !setMode;
+  66   3                              
+  67   3                      }
+  68   2      
+  69   2                      
+  70   2                      
+  71   2                      
+  72   2                      if(showMode == 0&&!setMode){
+  73   3                              Nixie_set(0,hour/10);
+  74   3                              Nixie_set(1,hour%10);
+  75   3                              Nixie_set(2,11);
+  76   3                              Nixie_set(3,min/10);
+  77   3                              Nixie_set(4,min%10);
+  78   3                              Nixie_set(5,11);
+  79   3                              Nixie_set(6,sec/10);
+  80   3                              Nixie_set(7,sec%10);
+  81   3                      }
+  82   2                      if(showMode == 1&&!setMode){
+  83   3                              Nixie_set(0,ring[0]/10);
+  84   3                              Nixie_set(1,ring[0]%10);
+  85   3                              Nixie_set(2,11);
+  86   3                              Nixie_set(3,ring[1]/10);
+  87   3                              Nixie_set(4,ring[1]%10);
+  88   3                              Nixie_set(5,11);
+  89   3                              Nixie_set(6,ring[2]/10);
+  90   3                              Nixie_set(7,ring[2]%10);
+  91   3                      }
+  92   2                      if(showMode == 2){
+  93   3                              Nixie_set(0,10);
+  94   3                              Nixie_set(1,10);
+  95   3                              Nixie_set(2,10);
+  96   3                              Nixie_set(3,10);
+  97   3                              Nixie_set(4,10);
+  98   3                              Nixie_set(5,(int)T/10);
+  99   3                              Nixie_set(6,(int)T%10);
+ 100   3                              Nixie_set(7,12);
+ 101   3                      }
+ 102   2                      
+ 103   2                      if(setMode){
+ 104   3                              if(showMode == 0){
+ 105   4                                      if(!setBufReady){
+ 106   5                                              setBuf[0]=hour;
+ 107   5                                              setBuf[1]=min;
+ 108   5                                              setBuf[2]=sec;
+ 109   5                                              setBufReady=1;
+ 110   5                                      }
+ 111   4      
+ 112   4                                      change();
+ 113   4                                      check();
+ 114   4                              }
+ 115   3                              if(showMode == 1 ){
+ 116   4                                      if(!setBufReady){
+C51 COMPILER V9.54   MAIN                                                                  12/03/2023 12:28:19 PAGE 3   
+
+ 117   5                                              setBuf[0]=ring[0];
+ 118   5                                              setBuf[1]=ring[1];
+ 119   5                                              setBuf[2]=ring[2];
+ 120   5                                              setBufReady=1;
+ 121   5                                      }
+ 122   4                                      change();
+ 123   4                                      check();
+ 124   4                              }
+ 125   3      
+ 126   3                              
+ 127   3                      }
+ 128   2              }
+ 129   1      }
+ 130          void change(void){
+ 131   1              if(keyNum ==2){
+ 132   2                      setBuf[setSelect]++;
+ 133   2              }
+ 134   1              if(keyNum ==3){
+ 135   2                      setBuf[setSelect]--;
+ 136   2              }
+ 137   1      }
+ 138          void ringCheck(){
+ 139   1              if(hour==ring[0]&&min==ring[1]&&sec==ring[2])
+ 140   1                      startRing=1;
+ 141   1      }
+ 142          
+ 143          void showBlankLoop(void){
+ 144   1              static bool blankStatus;
+ 145   1              if(setMode){
+ 146   2                      if(setSelect ==0){
+ 147   3                              if(blankStatus){
+ 148   4                                      Nixie_set(0,10);
+ 149   4                                      Nixie_set(1,10);
+ 150   4                              }else{
+ 151   4                                      if(showMode == 0){
+ 152   5                                              Nixie_set(0,setBuf[0]/10);
+ 153   5                                              Nixie_set(1,setBuf[0]%10);
+ 154   5                                      }
+ 155   4                                      if(showMode == 1){
+ 156   5                                              Nixie_set(0,setBuf[0]/10);
+ 157   5                                              Nixie_set(1,setBuf[0]%10);
+ 158   5                                      }
+ 159   4      
+ 160   4                              }
+ 161   3                      }
+ 162   2                      if(setSelect ==1){
+ 163   3                              if(blankStatus){
+ 164   4                                      Nixie_set(3,10);
+ 165   4                                      Nixie_set(4,10);
+ 166   4                              
+ 167   4                              }else{
+ 168   4                                      if(showMode == 0){
+ 169   5                                              Nixie_set(3,setBuf[1]/10);
+ 170   5                                              Nixie_set(4,setBuf[1]%10);
+ 171   5                                      }
+ 172   4                                      if(showMode == 1){
+ 173   5                                              Nixie_set(3,setBuf[1]/10);
+ 174   5                                              Nixie_set(4,setBuf[1]%10);
+ 175   5                                      }
+ 176   4                              }
+ 177   3                      }
+ 178   2                      if(setSelect ==2){
+C51 COMPILER V9.54   MAIN                                                                  12/03/2023 12:28:19 PAGE 4   
+
+ 179   3                              if(blankStatus){
+ 180   4                                      Nixie_set(6,10);
+ 181   4                                      Nixie_set(7,10);
+ 182   4                              }else{
+ 183   4                                      if(showMode == 0){
+ 184   5                                              Nixie_set(6,setBuf[2]/10);
+ 185   5                                              Nixie_set(7,setBuf[2]%10);
+ 186   5                                      }
+ 187   4                                      if(showMode == 1){
+ 188   5                                              Nixie_set(6,setBuf[2]/10);
+ 189   5                                              Nixie_set(7,setBuf[2]%10);
+ 190   5                                      }
+ 191   4                              }
+ 192   3                      }
+ 193   2                              
+ 194   2                              
+ 195   2              }
+ 196   1              blankStatus =!blankStatus;
+ 197   1      }
+ 198          void check(){
+ 199   1              if(setBuf[0]>=24)
+ 200   1                      setBuf[0]=0;
+ 201   1              if(setBuf[0]<0)
+ 202   1                      setBuf[0]=23;
+ 203   1              if(setBuf[1]>=59)
+ 204   1                      setBuf[1]=0;
+ 205   1              if(setBuf[1]<0)
+ 206   1                      setBuf[1]=59;
+ 207   1              if(setBuf[2]>=59)
+ 208   1                      setBuf[2]=0;
+ 209   1              if(setBuf[2]<0)
+ 210   1                      setBuf[2]=59;
+ 211   1      
+ 212   1      }
+ 213          
+ 214          void Sec_Loop(void)
+ 215          {
+ 216   1              if(1)
+ 217   1              {
+ 218   2                      sec++;
+ 219   2                      if(sec>=60)
+ 220   2                      {
+ 221   3                              sec=0;
+ 222   3                              min++;
+ 223   3                              if(min>=60)
+ 224   3                              {
+ 225   4                                      min=0;
+ 226   4                                      hour++;
+ 227   4                                      if(hour>=24)
+ 228   4                                      {
+ 229   5                                              hour=0;
+ 230   5                                      }
+ 231   4                              }
+ 232   3                      }
+ 233   2              }
+ 234   1      }
+ 235          
+ 236          
+ 237          
+ 238          
+ 239          
+ 240          
+C51 COMPILER V9.54   MAIN                                                                  12/03/2023 12:28:19 PAGE 5   
+
+ 241          
+ 242          void Timer0_Rountine(void) interrupt 1
+ 243          {
+ 244   1              static unsigned int T0count,nixieCount,secLoop,blank,count,ringTimeCount;
+ 245   1              T0count++;
+ 246   1              nixieCount++;
+ 247   1              secLoop++;
+ 248   1              blank++;
+ 249   1              count++;
+ 250   1              TL0 = 0x66;             //?????????
+ 251   1              TH0 = 0xFC;             //?????????
+ 252   1              if(T0count == 20){
+ 253   2                      key_loop();
+ 254   2                      T0count = 0;
+ 255   2              }
+ 256   1              if(nixieCount>=2){
+ 257   2                      nixieCount=0;
+ 258   2                      Nixie_loop();
+ 259   2              }
+ 260   1              if(secLoop>=1000){
+ 261   2                      DS18B20_ConvertT();     //转换温度
+ 262   2                      T=DS18B20_ReadT();      //读取温度
+ 263   2                      Sec_Loop();
+ 264   2                      secLoop=0;
+ 265   2              }
+ 266   1              if(blank == 500){
+ 267   2                      showBlankLoop();
+ 268   2                      blank = 0;
+ 269   2              }
+ 270   1              if(count == 200){
+ 271   2                      if(startRing){
+ 272   3                              led=!led;
+ 273   3                              ringTimeCount++;
+ 274   3                      }
+ 275   2                      if(ringTimeCount == 10){
+ 276   3                              startRing =0;
+ 277   3                              ringTimeCount=0;
+ 278   3                      }
+ 279   2                      count = 0;
+ 280   2              }
+ 281   1              
+ 282   1      
+ 283   1      }
+ 284          
+ 285          //void showBlankLoop(void){    //备份
+ 286          //      static bool blankStatus;
+ 287          //      if(setMode){
+ 288          //              if(setSelect ==0){
+ 289          //                      if(blankStatus){
+ 290          //                              Nixie_set(0,10);
+ 291          //                              Nixie_set(1,10);
+ 292          //                      }else{
+ 293          //                              if(showMode == 0){
+ 294          //                                      Nixie_set(0,hour/10);
+ 295          //                                      Nixie_set(1,hour%10);
+ 296          //                              }
+ 297          //                              if(showMode == 1){
+ 298          //                                      Nixie_set(0,ring[0]/10);
+ 299          //                                      Nixie_set(1,ring[0]%10);
+ 300          //                              }
+ 301          
+ 302          //                      }
+C51 COMPILER V9.54   MAIN                                                                  12/03/2023 12:28:19 PAGE 6   
+
+ 303          //              }
+ 304          //              if(setSelect ==1){
+ 305          //                      if(blankStatus){
+ 306          //                              Nixie_set(3,10);
+ 307          //                              Nixie_set(4,10);
+ 308          //                      
+ 309          //                      }else{
+ 310          //                              if(showMode == 0){
+ 311          //                                      Nixie_set(3,min/10);
+ 312          //                                      Nixie_set(4,min%10);
+ 313          //                              }
+ 314          //                              if(showMode == 1){
+ 315          //                                      Nixie_set(3,ring[1]/10);
+ 316          //                                      Nixie_set(4,ring[1]%10);
+ 317          //                              }
+ 318          //                      }
+ 319          //              }
+ 320          //              if(setSelect ==2){
+ 321          //                      if(blankStatus){
+ 322          //                              Nixie_set(6,10);
+ 323          //                              Nixie_set(7,10);
+ 324          //                      }else{
+ 325          //                              if(showMode == 0){
+ 326          //                                      Nixie_set(6,sec/10);
+ 327          //                                      Nixie_set(7,sec%10);
+ 328          //                              }
+ 329          //                              if(showMode == 1){
+ 330          //                                      Nixie_set(6,ring[2]/10);
+ 331          //                                      Nixie_set(7,ring[2]%10);
+ 332          //                              }
+ 333          //                      }
+ 334          //              }
+ 335          //                      
+ 336          //                      
+ 337          //      }
+ 338          //      blankStatus =!blankStatus;
+ 339          //}
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1289    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     34    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

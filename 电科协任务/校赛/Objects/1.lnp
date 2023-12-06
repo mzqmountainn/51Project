@@ -1,0 +1,10 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\Delay.obj",
+".\Objects\Nixie_plus.obj",
+".\Objects\Timer0.obj",
+".\Objects\key_selfPlus.obj",
+".\Objects\DS18B20.obj",
+".\Objects\OneWire.obj" 
+TO ".\Objects\1" 
+PRINT(".\Listings\1.m51") RAMSIZE(256) 

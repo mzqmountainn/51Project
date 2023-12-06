@@ -1,0 +1,76 @@
+C51 COMPILER V9.54   NIXIE_PLUS                                                            12/03/2023 12:28:19 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE NIXIE_PLUS
+OBJECT MODULE PLACED IN .\Objects\Nixie_plus.obj
+COMPILER INVOKED BY: D:\software\keilc51\C51\BIN\C51.EXE Nixie_plus.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(
+                    -.\Listings\Nixie_plus.lst) OBJECT(.\Objects\Nixie_plus.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include "Delay.h"      //包含Delay头文件
+   3          
+   4          //数码管显示缓存区
+   5          unsigned char Nixie_buf[8]={10,10,10,10,10,10,10,10};
+   6          
+   7          //数码管段码表    10 不显示 11 - 12 C
+   8          unsigned char NixieTable[]={0x3F,0x06,0x5B,0x4F,0x66,0x6D,0x7D,0x07,0x7F,0x6F,0x00,0x40,0x39};
+   9          
+  10          void Nixie_set(unsigned char location,Data){
+  11   1              Nixie_buf[location] = Data;
+  12   1      }
+  13          
+  14          //数码管显示子函数
+  15          void Nixie_scan(unsigned char Location,Number)
+  16          {
+  17   1              P0=0x00;                                //段码清0，消影-
+  18   1              switch(Location)                //位码输出
+  19   1              {
+  20   2                      case 1:P2_4=1;P2_3=1;P2_2=1;break;
+  21   2                      case 2:P2_4=1;P2_3=1;P2_2=0;break;
+  22   2                      case 3:P2_4=1;P2_3=0;P2_2=1;break;
+  23   2                      case 4:P2_4=1;P2_3=0;P2_2=0;break;
+  24   2                      case 5:P2_4=0;P2_3=1;P2_2=1;break;
+  25   2                      case 6:P2_4=0;P2_3=1;P2_2=0;break;
+  26   2                      case 7:P2_4=0;P2_3=0;P2_2=1;break;
+  27   2                      case 8:P2_4=0;P2_3=0;P2_2=0;break;
+  28   2              }
+  29   1              P0=NixieTable[Number];  //段码输出
+  30   1      
+  31   1      }
+  32          
+  33          void Nixie_loop(void){
+  34   1              static int time ;
+  35   1              Nixie_scan(time+1,Nixie_buf[time]);
+  36   1              time++;
+  37   1              if(time>=8)time = 0;
+  38   1      }
+  39                  
+  40          
+  41          
+  42          
+  43          
+  44          
+  45          
+  46          
+  47          
+  48          
+  49          
+  50          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    152    ----
+C51 COMPILER V9.54   NIXIE_PLUS                                                            12/03/2023 12:28:19 PAGE 2   
+
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     23    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

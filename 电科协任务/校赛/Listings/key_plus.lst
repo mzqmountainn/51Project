@@ -1,0 +1,13 @@
+C51 COMPILER V9.54   KEY_PLUS                                                              12/03/2023 10:41:53 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE KEY_PLUS
+OBJECT MODULE PLACED IN .\Objects\key_plus.obj
+COMPILER INVOKED BY: D:\software\keilc51\C51\BIN\C51.EXE key_plus.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\
+                    -Listings\key_plus.lst) OBJECT(.\Objects\key_plus.obj)
+
+line level    source
+
+*** ERROR C318 OF key_plus.c: can't open file 'key_plus.c'
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  1 ERROR(S)
