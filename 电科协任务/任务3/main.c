@@ -207,13 +207,12 @@ void Timer0_Rountine(void) interrupt 1
 }
 void parse(){
 	int location = 0;
+	int r_location;
 	for(location =0;location<10;location++){
 		if(rawChar[location]=='-'&&location!=0){
 			rawChar[location] = '\0';
 			break;
-		}
-
-	}
+		}}
 	frontData = atoi(rawChar);
 	endData = atoi(&(rawChar[location+1]));
 //	LCD_ShowNum(1,7,frontData,3);	//²âÊÔÓÃ

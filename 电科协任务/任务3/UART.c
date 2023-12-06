@@ -65,7 +65,7 @@ bit ReceiveString()
           while(!RI)
           {
               count++;
-              if(count>140)return 0;    //接收数据等待延迟，等待时间太久会导致CPU运算闲置，太短会出现"数据包被分割",默认count=130
+              if(count>140){*(RecStr+count)='\0';return 0;}    //接收数据等待延迟，等待时间太久会导致CPU运算闲置，太短会出现"数据包被分割",默认count=130
           }
           goto loop;
       }
