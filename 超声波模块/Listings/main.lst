@@ -1,0 +1,112 @@
+C51 COMPILER V9.54   MAIN                                                                  12/26/2023 00:17:09 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\software\keilc51\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\List
+                    -ings\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          /*#include <REGX52.H>
+   2          #include <Timer0.h>
+   3          #include <Delay.h>
+   4          #include <LCD1602.h>
+   5          #include <intrins.h>
+   6          
+   7          sbit Trig=P2^2;          //控制端 
+   8          sbit Echo=P2^1;          //接收端
+   9          
+  10          unsigned int receiveTime,realTime;
+  11          unsigned int length=0;
+  12          void main(void){
+  13                  Timer0Init();
+  14                  LCD_Init();
+  15                  Timer0_setCounter(0);
+  16                  while(1){
+  17                          Trig=0;
+  18                          Echo=0;
+  19                          Timer0_run(1);
+  20                          LCD_ShowString(1,1,"nmsl");
+  21                          
+  22                          Trig=1;
+  23                          Delay10us();
+  24                          _nop_();
+  25                          //while(!Echo);
+  26                          Timer0_setCounter(0);
+  27                          Trig=0;
+  28          
+  29                          while(Echo);
+  30                          receiveTime = Timer0_getCounter();
+  31                          
+  32                          realTime = (unsigned int)(receiveTime*0.916);
+  33                          length = (unsigned int)(realTime*0.017);
+  34                          
+  35                          LCD_ShowNum(2,9,realTime,5);//
+  36                          LCD_ShowNum(2,1,length,5);
+  37                          LCD_ShowString(2,6,"cm");
+  38                          Timer0_run(0);
+  39                          //Delay(1000);
+  40                  }
+  41          }*/
+  42          #include <intrins.h>
+  43          #include <REGX52.H>
+  44          #include <Delay.h>
+  45          #include <LCD1602.h>
+  46          sbit Trig=P2^2;          //控制端 
+  47          sbit Echo=P2^1;          //接收端
+  48          
+  49           //微秒级延时函数，延时t微秒，注意要包含头文件“intrins.h”
+  50          void delay_us(unsigned char t)
+  51          {
+  52   1              while(t--)
+  53   1              {
+  54   2                                      _nop_();
+C51 COMPILER V9.54   MAIN                                                                  12/26/2023 00:17:09 PAGE 2   
+
+  55   2              }
+  56   1      }
+  57          
+  58          void HC_SR04_Init(void) //用到了T0计时器
+  59          {
+  60   1                      TMOD &= 0xf1; //把T0配置为16位的定时计数模式
+  61   1      }
+  62          float getDistance(void) //获取一次距离值
+  63          {
+  64   1                      unsigned int n; 
+  65   1                      Trig = 1;
+  66   1                      TH0 = TL0 = 0;
+  67   1                      delay_us(10);
+  68   1                      Trig = 0; //10us以上的高电平脉冲
+  69   1                      while(!Echo); //等待返回，如果Echo为高就要开始计时了
+  70   1                      TR0 = 1;  //启动计时器
+  71   1                      while(Echo) ; //等待输出的高电平结束
+  72   1                      TR0 = 0; //关掉计时器
+  73   1                      n = (TH0)*256+TL0; //计算计数的数值
+  74   1      //              sendOneByte(TH0); //用于串口调试，可忽略
+  75   1      //              sendOneByte(' ');
+  76   1      //              sendOneByte(TL0);
+  77   1                      return 22.1*n/10000; //单位cm
+  78   1      }
+  79          void main(void){
+  80   1              HC_SR04_Init();
+  81   1              LCD_Init();
+  82   1              while(1){
+  83   2                      LCD_ShowNum(2,1,(unsigned int)getDistance(),5);
+  84   2                      Delay(100);
+  85   2              }
+  86   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    117    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

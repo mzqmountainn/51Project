@@ -1,0 +1,95 @@
+C51 COMPILER V9.54   MEMBRANEKEYBOARD                                                      01/02/2024 17:37:25 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MEMBRANEKEYBOARD
+OBJECT MODULE PLACED IN .\Objects\membraneKeyboard.obj
+COMPILER INVOKED BY: D:\software\keilc51\C51\BIN\C51.EXE membraneKeyboard.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND 
+                    -PRINT(.\Listings\membraneKeyboard.lst) OBJECT(.\Objects\membraneKeyboard.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include "Delay.h"
+   3          
+   4          #define membraneKeyboardIO P1
+   5          
+   6          sbit membraneKeyboardRow1= membraneKeyboardIO^0;
+   7          sbit membraneKeyboardRow2= membraneKeyboardIO^1;
+   8          sbit membraneKeyboardRow3= membraneKeyboardIO^2;
+   9          sbit membraneKeyboardRow4= membraneKeyboardIO^3;
+  10          sbit membraneKeyboardCol1= membraneKeyboardIO^4;
+  11          sbit membraneKeyboardCol2= membraneKeyboardIO^5;
+  12          sbit membraneKeyboardCol3= membraneKeyboardIO^6;
+  13          sbit membraneKeyboardCol4= membraneKeyboardIO^7;
+  14          
+  15          char membraneKeyboardLibrary[] = {'\0','1','2','3','A','4','5','6','B','7','8','9','C','*','0','#','D'};
+  16          
+  17          
+  18          char membraneKeyboardScan(){
+  19   1              unsigned int num = 0;
+  20   1              membraneKeyboardIO = 0xFF;
+  21   1              membraneKeyboardRow1 = 0;
+  22   1              if(membraneKeyboardCol1 == 0){Delay(20);while(membraneKeyboardCol1 == 0);Delay(20);num = 1;}
+  23   1              if(membraneKeyboardCol2 == 0){Delay(20);while(membraneKeyboardCol2 == 0);Delay(20);num = 2;}
+  24   1              if(membraneKeyboardCol3 == 0){Delay(20);while(membraneKeyboardCol3 == 0);Delay(20);num = 3;}
+  25   1              if(membraneKeyboardCol4 == 0){Delay(20);while(membraneKeyboardCol4 == 0);Delay(20);num = 4;}
+  26   1              
+  27   1              membraneKeyboardIO = 0xFF;
+  28   1              membraneKeyboardRow2 = 0;
+  29   1              if(membraneKeyboardCol1 == 0){Delay(20);while(membraneKeyboardCol1 == 0);Delay(20);num = 5;}
+  30   1              if(membraneKeyboardCol2 == 0){Delay(20);while(membraneKeyboardCol2 == 0);Delay(20);num = 6;}
+  31   1              if(membraneKeyboardCol3 == 0){Delay(20);while(membraneKeyboardCol3 == 0);Delay(20);num = 7;}
+  32   1              if(membraneKeyboardCol4 == 0){Delay(20);while(membraneKeyboardCol4 == 0);Delay(20);num = 8;}
+  33   1              
+  34   1              membraneKeyboardIO = 0xFF;
+  35   1              membraneKeyboardRow3 = 0;
+  36   1              if(membraneKeyboardCol1 == 0){Delay(20);while(membraneKeyboardCol1 == 0);Delay(20);num = 9;}
+  37   1              if(membraneKeyboardCol2 == 0){Delay(20);while(membraneKeyboardCol2 == 0);Delay(20);num = 10;}
+  38   1              if(membraneKeyboardCol3 == 0){Delay(20);while(membraneKeyboardCol3 == 0);Delay(20);num = 11;}
+  39   1              if(membraneKeyboardCol4 == 0){Delay(20);while(membraneKeyboardCol4 == 0);Delay(20);num = 12;}
+  40   1              
+  41   1              membraneKeyboardIO = 0xFF;
+  42   1              membraneKeyboardRow4 = 0;
+  43   1              if(membraneKeyboardCol1 == 0){Delay(20);while(membraneKeyboardCol1 == 0);Delay(20);num = 13;}
+  44   1              if(membraneKeyboardCol2 == 0){Delay(20);while(membraneKeyboardCol2 == 0);Delay(20);num = 14;}
+  45   1              if(membraneKeyboardCol3 == 0){Delay(20);while(membraneKeyboardCol3 == 0);Delay(20);num = 15;}
+  46   1              if(membraneKeyboardCol4 == 0){Delay(20);while(membraneKeyboardCol4 == 0);Delay(20);num = 16;}
+  47   1              return membraneKeyboardLibrary[num];
+  48   1      }
+  49          
+  50          
+  51          
+  52          
+  53          
+  54          
+C51 COMPILER V9.54   MEMBRANEKEYBOARD                                                      01/02/2024 17:37:25 PAGE 2   
+
+  55          
+  56          
+  57          
+  58          
+  59          
+  60          
+  61          
+  62          
+  63          
+  64          
+  65          
+  66          
+  67          
+  68          
+  69          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    448    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     17       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

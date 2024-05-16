@@ -1,0 +1,95 @@
+C51 COMPILER V9.54   MAIN                                                                  02/21/2024 16:44:05 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\software\keilc51\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\List
+                    -ings\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include "Timer0.h"
+   3          #include "control.h"
+   4          #include "Delay.h"
+   5          
+   6          typedef enum{false = 0,true =1} bool;
+   7          typedef enum{right = 0,back =1} direction;
+   8          direction L = right;direction R = right;
+   9          int pwmL,pwmR;
+  10          int modeL,modeR;
+  11          //in1ï¼Œ2ä¸ºå·¦ in2å‘å‰
+  12          //in3ï¼Œ4ä¸ºå³ï¼Œin3å‘å‰
+  13          //sbit IN1=P1^4;
+  14          //sbit IN2=P1^5;
+  15          //sbit IN3=P1^3;
+  16          //sbit IN4=P1^2;
+  17          //sbit EN1=P1^7;
+  18          //sbit EN2=P1^6;
+  19          ////×îÓÒÊÇtrace1
+  20          //sbit trace1  =P2^3;
+  21          //sbit trace2  =P2^2;
+  22          //sbit trace3  =P2^1;
+  23          //sbit trace4  =P2^0;
+  24          
+  25          
+  26          
+  27          int main(void){
+  28   1              Timer0Init();
+  29   1              pwmL =60;pwmR=55;
+  30   1              P1=0x00;
+  31   1              //IN2=1;IN3=1;
+  32   1              EN1=1;EN2=1;
+  33   1              while(1){
+  34   2                      control();
+  35   2              }
+  36   1              return 0 ;
+  37   1      }
+  38          
+  39          
+  40          void Timer0_Rountine(void) interrupt 1
+  41          {
+  42   1              static unsigned int countT,countS;
+  43   1              countT++;
+  44   1              countT%=100;
+  45   1              countT++;
+  46   1              countT%=100;
+  47   1              TL0 = 0x66;             //ÉèÖÃ¶¨Ê±³õÖµ
+  48   1              TH0 = 0xFC;             //ÉèÖÃ¶¨Ê±³õÖµ
+  49   1      //      if(countT>=50){
+  50   1      //              P2_0=~P2_0;
+  51   1      //      }
+  52   1              if(pwmL<=countT){
+  53   2                      EN1 = 0;
+  54   2              }
+C51 COMPILER V9.54   MAIN                                                                  02/21/2024 16:44:05 PAGE 2   
+
+  55   1              if(pwmL>countT){
+  56   2                      EN1 =1;
+  57   2              }
+  58   1              
+  59   1              if(pwmR<=countT){
+  60   2                      EN2 = 0;
+  61   2              }
+  62   1              if(pwmR>countT){
+  63   2                      EN2 =1;
+  64   2              }
+  65   1              
+  66   1              
+  67   1      }
+*** WARNING C280 IN LINE 42 OF main.c: 'countS': unreferenced local variable
+*** WARNING C294 IN LINE 36 OF main.c: unreachable code
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    165    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     14    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)

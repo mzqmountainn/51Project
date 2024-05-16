@@ -1,0 +1,110 @@
+C51 COMPILER V9.54   CONTROL                                                               02/21/2024 16:44:06 PAGE 1   
+
+
+C51 COMPILER V9.54, COMPILATION OF MODULE CONTROL
+OBJECT MODULE PLACED IN .\Objects\control.obj
+COMPILER INVOKED BY: D:\software\keilc51\C51\BIN\C51.EXE control.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\L
+                    -istings\control.lst) OBJECT(.\Objects\control.obj)
+
+line level    source
+
+   1          #include <REGX52.H>
+   2          #include "control.h"
+   3          #include "Delay.h"
+   4          
+   5          //extern sbit IN1=P1^4;
+   6          //extern sbit IN2=P1^5;
+   7          //extern sbit IN3=P1^3;
+   8          //extern sbit IN4=P1^2;
+   9          //extern sbit EN1=P1^7;
+  10          //extern sbit EN2=P1^6;
+  11          //extern sbit trace1  =P2^3;
+  12          //extern sbit trace2  =P2^2;
+  13          //extern sbit trace3  =P2^1;
+  14          //extern sbit trace4  =P2^0;
+  15          
+  16          #define R_FIX 6 //右修正量（车一直向右偏）
+  17          
+  18          //c_ 小车车轮运动控制函数
+  19          extern int pwmL,pwmR;
+  20          void c_stop(void){
+  21   1              IN2=0;IN3=0;
+  22   1              IN1=0;IN4=0;
+  23   1              pwmL=0;pwmR=0;
+  24   1      }
+  25          void c_goStraight(void){
+  26   1              IN2=1;IN3=1;
+  27   1              IN1=0;IN4=0;
+  28   1              pwmL=20;pwmR=20+R_FIX;//30
+  29   1      }
+  30          void c_turnLeft(void){
+  31   1              IN2=1;IN3=1;
+  32   1              IN1=0;IN4=0;
+  33   1              pwmL=15;pwmR=24+R_FIX;
+  34   1      }
+  35          void c_turnRight(void){
+  36   1              IN2=1;IN3=1;
+  37   1              IN1=0;IN4=0;
+  38   1              pwmL=24;pwmR=15+R_FIX;
+  39   1      }
+  40          //void c_turnLeftStop(void){
+  41          //      IN2=0;IN3=1;
+  42          //      IN1=1;IN4=0;
+  43          //      pwmL=60;pwmR=40+R_FIX;
+  44          //}
+  45          //void c_turnRightStop(void){
+  46          //      IN2=1;IN3=0;
+  47          //      IN1=0;IN4=1;
+  48          //      pwmL=40;pwmR=75+R_FIX;
+  49          //}
+  50          void c_turnLeftFast(void){
+  51   1              IN2=1;IN3=1;
+  52   1              IN1=0;IN4=0;
+  53   1              pwmL=9;pwmR=20+R_FIX;
+  54   1      }
+C51 COMPILER V9.54   CONTROL                                                               02/21/2024 16:44:06 PAGE 2   
+
+  55          
+  56          
+  57          void c_turnLeftSlow(void){
+  58   1              IN2=1;IN3=1;
+  59   1              IN1=0;IN4=0;
+  60   1              pwmL=9;pwmR=12+R_FIX;
+  61   1      }
+  62          void c_turnRightSlow(void){
+  63   1              IN2=1;IN3=1;
+  64   1              IN1=0;IN4=0;
+  65   1              pwmL=15;pwmR=0+R_FIX;
+  66   1      }
+  67          
+  68          void c_backTest(void){
+  69   1              IN2=0;IN3=0;
+  70   1              IN1=1;IN4=1;
+  71   1              pwmL=50;pwmR=50+R_FIX;
+  72   1      }
+  73          
+  74          void c_test(void){
+  75   1              IN2=0;IN3=0;
+  76   1              IN1=1;IN4=1;
+  77   1              pwmL=100;pwmR=100;
+  78   1      }
+  79          
+  80          
+  81          void control(){
+  82   1              c_test();
+  83   1      
+  84   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    189    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
